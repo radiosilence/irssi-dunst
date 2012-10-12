@@ -46,9 +46,7 @@ sub notify {
     my $remote = Irssi::settings_get_str('notify_remote');
     if ($remote ne '') {
 	my $cmd = "EXEC - ssh -q " . $remote .
-	    " \"dbus-send --session /org/irssi/Irssi org.irssi.Irssi.IrssiNotify" .
-	    " string:'" . $summary . "'" .
-	    " string:'" . $message . "'\"";
+	    "notify-send -a irssi '" . $summary . "' '". $message . "'";
 	$server->command($cmd);
     }
 
