@@ -39,13 +39,19 @@ sub notify {
     $summary = sanitize($summary);
     $message = sanitize($message);
 
-    my $cmd = "EXEC - notify-send" .
-	" -i " . Irssi::settings_get_str('notify_icon') .
-	" -t " . Irssi::settings_get_str('notify_time') .
-	" -- '" . $summary . "'" .
-	" '" . $message . "'";
-
+    my $cmd = "EXEC - " .
+	"notify-send -a irssi '" . $summary . "' '". $message . "'";
     $server->command($cmd);
+
+    my $remote = Irssi::settings_get_str('notify_remote');
+    if ($remote ne '') {
+	my $cmd = "EXEC - ssh -q " . $remote .
+	    " \"dbus-send --session /org/irssi/Irssi org.irssi.Irssi.IrssiNotify" .
+	    " string:'" . $summary . "'" .
+	    " string:'" . $message . "'\"";
+	$server->command($cmd);
+    }
+
 }
  
 sub print_text_notify {
