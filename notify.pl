@@ -55,13 +55,12 @@ sub notify {
 sub print_text_notify {
     my ($dest, $text, $stripped) = @_;
     my $server = $dest->{server};
-
+    #my $channel = $dest->{channel};
     return if (!$server || !($dest->{level} & MSGLEVEL_HILIGHT));
     my $sender = $stripped;
-    $sender =~ s/^\<.([^\>]+)\>.+/\1/ ;
-    $stripped =~ s/^\<.[^\>]+\>.// ;
-    my $summary = $dest->{target} . ": " . $sender;
-    notify($server, $summary, $stripped);
+    $sender =~ s/^(.+?) .*/\1/ ;
+    $stripped =~ s/^.+? (.*)/\1/ ;
+    notify($server, $sender, $stripped);
 }
 
 sub message_private_notify {
