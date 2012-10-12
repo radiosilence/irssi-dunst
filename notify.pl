@@ -59,7 +59,7 @@ sub print_text_notify {
     return if (!$server || !($dest->{level} & MSGLEVEL_HILIGHT));
     my $sender = $stripped;
     $sender =~ s/^\<?(.+?)\>? .*/\1/ ;
-    $stripped =~ s/^.+? (.*)/\1/ ;
+    $stripped =~ s/^.+? +(.*)/\1/ ;
     notify($server, $sender, $stripped);
 }
 
