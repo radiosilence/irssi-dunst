@@ -58,7 +58,7 @@ sub print_text_notify {
     #my $channel = $dest->{channel};
     return if (!$server || !($dest->{level} & MSGLEVEL_HILIGHT));
     my $sender = $stripped;
-    $sender =~ s/^(.+?) .*/\1/ ;
+    $sender =~ s/^\<?(.+?)\>? .*/\1/ ;
     $stripped =~ s/^.+? (.*)/\1/ ;
     notify($server, $sender, $stripped);
 }
