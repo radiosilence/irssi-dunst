@@ -8,26 +8,27 @@
 use strict;
 use Irssi;
 use vars qw($VERSION %IRSSI);
+use HTML::Entities;
 
-$VERSION = "0.01";
+$VERSION = "0.5";
 %IRSSI = (
     authors     => 'Luke Macken, Paul W. Frields',
     contact     => 'lewk@csh.rit.edu, stickster@gmail.com',
     name        => 'notify.pl',
-    description => 'Use libnotify to alert user to hilighted messages',
+    description => 'Use D-Bus to alert user to hilighted messages',
     license     => 'GNU General Public License',
-    url         => 'http://lewk.org/log/code/irssi-notify',
+    url         => 'http://code.google.com/p/irssi-libnotify',
 );
 
-Irssi::settings_add_str('notify', 'notify_icon', 'gtk-dialog-info');
-Irssi::settings_add_str('notify', 'notify_time', '5000');
+Irssi::settings_add_str('notify', 'notify_remote', '');
 
 sub sanitize {
   my ($text) = @_;
-  $text =~ s/&/&amp;/g; # That could have been done better.
-  $text =~ s/</&lt;/g;
-  $text =~ s/>/&gt;/g;
-  $text =~ s/'/&apos;/g;
+  encode_entities($text,'\'<>&');
+  my $apos = "&#39;";
+  my $aposenc = "\&apos;";
+  $text =~ s/$apos/$aposenc/g;
+  $text =~ s/"/\\"/g;
   return $text;
 }
 
@@ -63,7 +64,7 @@ sub message_private_notify {
     my ($server, $msg, $nick, $address) = @_;
 
     return if (!$server);
-    notify($server, "Private message from ".$nick, $msg);
+    notify($server, "PM from ".$nick, $msg);
 }
 
 sub dcc_request_notify {
@@ -77,3 +78,4 @@ sub dcc_request_notify {
 Irssi::signal_add('print text', 'print_text_notify');
 Irssi::signal_add('message private', 'message_private_notify');
 Irssi::signal_add('dcc request', 'dcc_request_notify');
+
