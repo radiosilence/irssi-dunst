@@ -40,13 +40,13 @@ sub notify {
     $message = sanitize($message);
 
     my $cmd = "EXEC - " .
-	"notify-send -a irssi '" . $summary . "' '". $message . "'";
+	"notify-send -a irssi -- '" . $summary . "' '". $message . "'";
     $server->command($cmd);
 
     my $remote = Irssi::settings_get_str('notify_remote');
     if ($remote ne '') {
 	my $cmd = "EXEC - ssh -q " . $remote .
-	    "notify-send -a irssi '" . $summary . "' '". $message . "'";
+	    "notify-send -a irssi -- '" . $summary . "' '". $message . "'";
 	$server->command($cmd);
     }
 
